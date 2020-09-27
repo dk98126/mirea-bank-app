@@ -2,73 +2,48 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link type="text/css" th:href="@{/registration.css}" rel="stylesheet">
+    <title>Регистрация</title>
 </head>
 <body>
-
-<form>
-    <div>
-
-        <p>
-            <label for="name">Имя</label>
-            <input type="text" name="name" id="name" required pattern="[А-Я][а-я]+" placeholder="Ваше имя"><span></span>
-        </p>
-
-        <p>
-            <label for="second_name">Фамилия</label>
-            <input type="text" name="name" id="second_name" required pattern="[А-Я][а-я]+"
-                   placeholder="Ваша фамилия"><span></span>
-        </p>
-
-        <p>
-            <label for="city">Город</label>
-            <input type="text" name="name" id="city" required pattern="[А-Я][а-я]+"
-                   placeholder="Не указан"><span></span>
-        </p>
-
-        <p>
-            <label for="Email">Эл. почта</label>
-            <input type="email" name="name" id="Email" required placeholder="example@mail.ru"><span></span>
-        </p>
-
-
-        <p>
-            <label for="Password">Пароль</label>
-            <input type="password" name="name" id="Password" required placeholder="минимум 8 символов"
-                   minlength="8"><span></span>
-        </p>
-        <p>
-            <label for="Password1">Повторите</label>
-            <input type="password" name="name" id="Password1" required minlength="8"><span></span>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-
-                    const pass1 = document.querySelector('#Password'),
-                        pass2 = document.querySelector('#Password1'),
-                        submit = document.querySelector('#submit');
-                    pass1.addEventListener('input', function () {
-                        this.value !== pass2.value ? pass2.setCustomValidity('Пароли не совпадают') : pass2.setCustomValidity('');
-                    })
-                    pass2.addEventListener('input', function () {
-                        this.value !== pass1.value ? this.setCustomValidity('Пароли не совпадают') : this.setCustomValidity('');
-                        !pass2.checkValidity() && submit.click();
-                    })
-                    submit.addEventListener('click', function (e) {
-                        pass1.value === '' && e.preventDefault();
-                    })
-                })
-            </script>
-        </p>
-        <p>
-            <label for="captcha">Введите число с картинки</label><br><br>
-            <span>2589</span><input type="text" name="name" id="captcha" pattern="2589" required><span></span>
-        </p>
-
-    </div>
-    <footer>
-        <button type="submit">Зарегистрироваться</button>
-    </footer>
+<!--/*@thymesVar id="form" type="com.dk98126.mireabankapp.model.form.RegisterUserForm"*/-->
+<form th:action="@{/registration}" th:object="${form}" method="post">
+    <table>
+        <tr>
+            <td>Фамилия:</td>
+            <td><input type="text" th:field="*{lastName}"/></td>
+            <td style="color: red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></td>
+        </tr>
+        <tr>
+            <td>Имя:</td>
+            <td><input type="text" th:field="*{firstName}"/></td>
+            <td style="color: red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></td>
+        </tr>
+        <tr>
+            <td>Отчество:</td>
+            <td><input type="text" th:field="*{middleName}"/></td>
+            <td style="color: red" th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}"></td>
+        </tr>
+        <tr>
+            <td>Телефон:</td>
+            <td><input type="text" th:field="*{phoneNumber}"/></td>
+            <td style="color: red" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></td>
+        </tr>
+        <tr>
+            <td>Логин:</td>
+            <td><input type="text" th:field="*{login}"/></td>
+            <td style="color: red" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></td>
+        </tr>
+        <tr>
+            <td>Пароль:</td>
+            <td><input type="password" th:field="*{password}"/></td>
+            <td style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit">Submit</button>
+            </td>
+        </tr>
+    </table>
 </form>
 </body>
 </html>

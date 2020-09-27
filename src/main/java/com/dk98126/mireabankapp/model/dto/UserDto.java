@@ -1,4 +1,4 @@
-package com.dk98126.mireabankapp.dto;
+package com.dk98126.mireabankapp.model.dto;
 
 import lombok.Data;
 
