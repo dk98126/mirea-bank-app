@@ -1,5 +1,7 @@
 package com.dk98126.mireabankapp.service;
 
+import com.dk98126.mireabankapp.exception.LoginExistsException;
+import com.dk98126.mireabankapp.exception.PhoneNumberExistsException;
 import com.dk98126.mireabankapp.model.dto.UserDto;
 import com.dk98126.mireabankapp.model.enm.UserRole;
 import com.dk98126.mireabankapp.model.entity.UserEntity;
@@ -18,14 +20,21 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
+    // TODO вместо исключений  возвращать список из fieldError
     public void registerUser(RegisterUserForm form) {
+        String login = form.getLogin();
+        String phoneNumber = formatPhoneNumber(form.getPhoneNumber());
+        if (userRepo.existsByLogin(login)) {
+            throw new LoginExistsException();
+        } else if (userRepo.existsByPhoneNumber(phoneNumber)) {
+            throw new PhoneNumberExistsException();
+        }
         UserEntity userEntity = new UserEntity();
-        userEntity.setLogin(form.getLogin());
+        userEntity.setLogin(login);
         userEntity.setFirstName(form.getFirstName());
         userEntity.setMiddleName(form.getMiddleName());
         userEntity.setLastName(form.getLastName());
-        // TODO парсить номер телефона
-        userEntity.setPhoneNumber(formatPhoneNumber(form.getPhoneNumber()));
+        userEntity.setPhoneNumber(phoneNumber);
         userEntity.setPassword(form.getPassword());
         userEntity.setRole(UserRole.USER);
         userRepo.save(userEntity);
