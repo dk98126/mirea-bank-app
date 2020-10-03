@@ -1,10 +1,13 @@
 package com.dk98126.mireabankapp.controller;
 
+import com.dk98126.mireabankapp.exception.LoginExistsException;
+import com.dk98126.mireabankapp.exception.PhoneNumberExistsException;
 import com.dk98126.mireabankapp.model.form.RegisterUserForm;
 import com.dk98126.mireabankapp.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +44,17 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             return "registration";
         }
-        userService.registerUser(form);
+        try {
+            userService.registerUser(form);
+        } catch (LoginExistsException e) {
+            FieldError fieldError = new FieldError("form", "login", "Логин занят");
+            bindingResult.addError(fieldError);
+            return "registration";
+        } catch (PhoneNumberExistsException e) {
+            FieldError fieldError = new FieldError("form", "phoneNumber", "Телефон уже зарегистрирован");
+            bindingResult.addError(fieldError);
+            return "registration";
+        }
         return "redirect:/main";
     }
 
