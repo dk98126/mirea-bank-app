@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -18,10 +19,10 @@ public class UserEntity {
     private Long id;
 
     @Column(name = "login", nullable = false, unique = true)
-    String login;
+    private String login;
 
     @Column(name = "password", nullable = false)
-    String password;
+    private String password;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -43,4 +44,9 @@ public class UserEntity {
     @Pattern(regexp = "^7\\d{10}$")
     private String phoneNumber;
 
+    @OneToMany(mappedBy = "user")
+    private List<AccountEntity> accounts;
+
+    @OneToMany(mappedBy = "user")
+    private List<AccountRequestEntity> accountRequests;
 }
