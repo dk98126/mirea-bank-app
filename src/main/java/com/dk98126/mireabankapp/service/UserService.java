@@ -7,6 +7,7 @@ import com.dk98126.mireabankapp.model.enm.UserRole;
 import com.dk98126.mireabankapp.model.entity.UserEntity;
 import com.dk98126.mireabankapp.model.form.RegisterUserForm;
 import com.dk98126.mireabankapp.repository.UserRepo;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserRepo userRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepo userRepo) {
+    public UserService(UserRepo userRepo,
+                       PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // TODO вместо исключений  возвращать список из fieldError
@@ -35,13 +39,13 @@ public class UserService {
         userEntity.setMiddleName(form.getMiddleName());
         userEntity.setLastName(form.getLastName());
         userEntity.setPhoneNumber(phoneNumber);
-        userEntity.setPassword(form.getPassword());
+        userEntity.setPassword(passwordEncoder.encode(form.getPassword()));
         userEntity.setRole(UserRole.USER);
         userRepo.save(userEntity);
     }
 
     private String formatPhoneNumber(String phoneNumber) {
-        String numberFromDigits = phoneNumber.replaceAll("[-+\\- ()]", "");
+        String numberFromDigits = phoneNumber.replaceAll("[-+ ()]", "");
         return "7" + numberFromDigits.substring(numberFromDigits.length() - 10);
     }
 
