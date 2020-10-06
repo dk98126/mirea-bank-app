@@ -55,7 +55,14 @@ public class MainController {
             bindingResult.addError(fieldError);
             return "registration";
         }
-        return "redirect:/main";
+        return "redirect:/my-room";
     }
-
+    @GetMapping("/login")
+    public String loginPage(@ModelAttribute("form") RegisterUserForm form) {
+        return "login";
+    }
+    @GetMapping("/my-room")
+    public String myRoomPage(@ModelAttribute("form") RegisterUserForm form) {
+        return "my-room";
+    }
 }
