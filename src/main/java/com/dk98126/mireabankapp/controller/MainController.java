@@ -57,12 +57,14 @@ public class MainController {
         }
         return "redirect:/my-room";
     }
+
     @GetMapping("/login")
-    public String loginPage(@ModelAttribute("form") RegisterUserForm form) {
+    public String loginPage() {
         return "login";
     }
+
     @GetMapping("/my-room")
-    public String myRoomPage(@ModelAttribute("form") RegisterUserForm form) {
+    public String myRoomPage() {
         return "my-room";
     }
 }

@@ -1,6 +1,7 @@
 package com.dk98126.mireabankapp.model.form;
 
 import lombok.Data;
+import validators.annotation.PasswordConstraint;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,14 +13,14 @@ public class RegisterUserForm {
     String login;
 
     @NotNull
-    @Pattern(regexp = "^(?=[a-zA-Z\\d@#'.,:^)(*$%=+!;\"-]{0,63}[a-z])(?=[a-zA-Z\\d@#'.,:^)(*$%=+!;\"-]{0,63}[A-Z])(?=[a-zA-Z\\d@#'.,:^)(*$%=+!;\"-]{0,63}\\d)(?=[a-zA-Z\\d@#'.,:^)(*$%=+!;\"-]{0,63}[@#'.,:^)(*$%=+!;\"-])[a-zA-Z\\d@#'.,:^)(*$%=+!;\"-]{8,64}$", message = "Пароль должен соответствовать определенному паттерну")
+    @PasswordConstraint
     String password;
 
     @NotBlank
     @Pattern(regexp = "^[А-Я][а-я]*", message = "Имя должно содержать только символы кириллицы и начинаться с прописной буквы")
     private String firstName;
 
-    @Pattern(regexp = "^([А-Я][а-я]*)?$", message = "Отчество(при наличии) должно содержать только символы кириллицы и начинаться с прописной буквы")
+    @Pattern(regexp = "^([А-Я][а-я]*)?$", message = "Отчество должно содержать только символы кириллицы и начинаться с прописной буквы")
     private String middleName;
 
     @NotBlank
