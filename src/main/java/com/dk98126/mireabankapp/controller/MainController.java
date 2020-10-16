@@ -2,7 +2,10 @@ package com.dk98126.mireabankapp.controller;
 
 import com.dk98126.mireabankapp.exception.LoginExistsException;
 import com.dk98126.mireabankapp.exception.PhoneNumberExistsException;
+import com.dk98126.mireabankapp.model.enm.AccountType;
+import com.dk98126.mireabankapp.model.form.CreateAccountRequestForm;
 import com.dk98126.mireabankapp.model.form.RegisterUserForm;
+import com.dk98126.mireabankapp.service.AccountRequestService;
 import com.dk98126.mireabankapp.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +23,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MainController {
 
     private final UserService userService;
-
+    private final AccountRequestService accountRequestService;
+    String login = "Ilya";
     private final AtomicInteger counter = new AtomicInteger();
 
-    public MainController(UserService userService) {
+    public MainController(UserService userService, AccountRequestService accountRequestService) {
         this.userService = userService;
+        this.accountRequestService = accountRequestService;
     }
 
     @GetMapping("/main")
@@ -66,5 +71,16 @@ public class MainController {
     @GetMapping("/my-room")
     public String myRoomPage() {
         return "my-room";
+    }
+
+    @GetMapping("/create-request")
+    public String createRequestPage() {
+        return "create-request";
+    }
+
+    @PostMapping("/create-request")
+    public String createRequest(@ModelAttribute("form") CreateAccountRequestForm form) {
+        accountRequestService.createRequest(form, login);
+        return "success-create-request";
     }
 }
