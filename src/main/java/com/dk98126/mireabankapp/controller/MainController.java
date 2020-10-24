@@ -6,6 +6,7 @@ import com.dk98126.mireabankapp.model.form.CreateAccountRequestForm;
 import com.dk98126.mireabankapp.model.form.RegisterUserForm;
 import com.dk98126.mireabankapp.service.AccountRequestService;
 import com.dk98126.mireabankapp.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.validation.Valid;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -22,7 +24,6 @@ public class MainController {
 
     private final UserService userService;
     private final AccountRequestService accountRequestService;
-    String login = "Ilya";
     private final AtomicInteger counter = new AtomicInteger();
 
     public MainController(UserService userService, AccountRequestService accountRequestService) {
@@ -76,9 +77,9 @@ public class MainController {
         return "create-request";
     }
 
-    //TODO передавать логин текущего пользователя, в зависимости от сессии
     @PostMapping("/create-request")
     public String createRequest(@ModelAttribute("form") CreateAccountRequestForm form) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
         accountRequestService.createRequest(form, login);
         return "success-create-request";
     }

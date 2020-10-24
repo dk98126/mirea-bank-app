@@ -7,29 +7,29 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.web.WebApplicationInitializer;
 
-import javax.servlet.ServletContext;
-import javax.servlet.SessionTrackingMode;
-import java.util.EnumSet;
+import javax.servlet.http.Cookie;
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebApplicationInitializer {
-    private static final String ID_FOR_ENCODE = "bcrypt";
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private static final String BCRYPT_ID = "bcrypt";
+    private static final String NOOP_ID = "noop";
     private static final Map<String, PasswordEncoder> encoders = new HashMap<>();
 
     static {
-        encoders.put(ID_FOR_ENCODE, new BCryptPasswordEncoder());
+        encoders.put(BCRYPT_ID, new BCryptPasswordEncoder());
+        encoders.put(NOOP_ID, NoOpPasswordEncoder.getInstance());
     }
 
     private final PasswordEncoder passwordEncoder;
 
     public SecurityConfig() {
-        this.passwordEncoder = new DelegatingPasswordEncoder(ID_FOR_ENCODE, encoders);
+        this.passwordEncoder = new DelegatingPasswordEncoder(BCRYPT_ID, encoders);
     }
 
     @Bean
@@ -38,15 +38,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebA
     }
 
     @Bean
+    // TODO разобраться, для чего он
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // TODO нормально настроить безопасность
-
+        // TODO чуть-чуть доконфигурировать сессию
         http
+                .authorizeRequests()
+                .antMatchers("/main", "/registration", "/login", "/images/**", "/favicon.ico").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .csrf().disable()
+                .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/my-room")
+                .permitAll()
+
+                .and()
+
+                .logout()
+                .addLogoutHandler(((request, response, authentication) -> {
+                    for (Cookie cookie : request.getCookies()) {
+                        String cookieName = cookie.getName();
+                        Cookie cookieToDelete = new Cookie(cookieName, null);
+                        cookieToDelete.setMaxAge(0);
+                        response.addCookie(cookieToDelete);
+                    }
+                }))
+
+                .and()
+
                 .sessionManagement()
                 .sessionFixation()
                 .migrateSession()
@@ -55,24 +79,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebA
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
                 .expiredUrl("/main");
-        http.
-                logout()
-                .deleteCookies("JSESSIONID");
-
-        http
-                .authorizeRequests()
-                .antMatchers("/main", "/registration", "/login").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .csrf().disable()
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/my-room")
-                .permitAll();
-    }
-
-    @Override
-    public void onStartup(ServletContext servletContext) {
-        servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
     }
 }
