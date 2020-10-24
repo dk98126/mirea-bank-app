@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>lk page</title>
+</head>
+<body>
+<img th:src="@{/images/mirea-logo.png}" alt="mirea-logo" style="vertical-align: middle">
+<p>Заявка на открытие счета успешно создана!
+</p>
+<form th:action="@{/my-room}">
+    <input type="submit" value="Перейти в личный кабинет">
+</form>
+</body>
+</html>

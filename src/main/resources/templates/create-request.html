@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>lk page</title>
+</head>
+<body>
+<img th:src="@{/images/mirea-logo.png}" alt="mirea-logo" style="vertical-align: middle">
+<!--/*@thymesVar id="form" type="com.dk98126.mireabankapp.model.form.CreateAccountRequestForm"*/-->
+<form th:action="@{/create-request}" th:object="${form}" method="post">
+    <text>Выберите тип счета</text>
+    <select name="accountType">
+        <option th:each="accountType : ${T(com.dk98126.mireabankapp.model.enm.AccountType).values()}"
+                th:value="${accountType}" th:text="${accountType}"></option>
+    </select>
+    <button type="submit">Создать заявку</button>
+</form>
+<form th:action="@{/my-room}">
+    <input type="submit" value="Вернуться в личный кабинет">
+</form>
+</body>
+</html>

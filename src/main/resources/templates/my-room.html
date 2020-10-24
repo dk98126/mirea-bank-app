@@ -5,11 +5,11 @@
     <title>lk page</title>
 </head>
 <body>
-<img th:src="@{/mirea-logo.png}" alt="mirea-logo" style="vertical-align: middle">
+<img th:src="@{/images/mirea-logo.png}" alt="mirea-logo" style="vertical-align: middle">
 <form th:action="@{/main}">
     <input type="submit" value="Сделать перевод">
 </form>
-<form th:action="@{/main}">
+<form th:action="@{/create-request}" method="get">
     <input type="submit" value="Создать счет">
 </form>
 <form th:action="@{/main}">
@@ -21,7 +21,7 @@
 <form th:action="@{/main}">
     <input type="submit" value="Настройка аккаунта">
 </form>
-<form th:action="@{/main}">
+<form th:action="@{/logout}">
     <input type="submit" value="Выйти">
 </form>
 </body>

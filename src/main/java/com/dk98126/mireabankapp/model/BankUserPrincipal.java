@@ -5,11 +5,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
 // TODO разобраться и переконфигурить
-public class BankUserPrincipal implements UserDetails {
+public class BankUserPrincipal implements UserDetails, Serializable {
+    private static final long serialVersionUID = 1;
+
     private UserEntity userEntity;
 
     public BankUserPrincipal(UserEntity userEntity) {

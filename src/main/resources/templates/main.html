@@ -6,8 +6,9 @@
     <title>Main page test</title>
 </head>
 <body>
+
 <span th:text="${'Привет, ' + name + '. Сайт посетили ' + counter + ' раз'}"></span>
-<img th:src="@{/mirea-logo.png}" alt="mirea-logo" style="vertical-align: middle">
+<img th:src="@{/images/mirea-logo.png}" alt="mirea-logo" style="vertical-align: middle">
 
 <form th:action="@{/registration}">
     <input type="submit" value="Регистрация">
