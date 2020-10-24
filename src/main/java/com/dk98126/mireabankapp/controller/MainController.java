@@ -6,6 +6,8 @@ import com.dk98126.mireabankapp.model.form.CreateAccountRequestForm;
 import com.dk98126.mireabankapp.model.form.RegisterUserForm;
 import com.dk98126.mireabankapp.service.AccountRequestService;
 import com.dk98126.mireabankapp.service.UserService;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,8 +34,13 @@ public class MainController {
     }
 
     @GetMapping("/main")
-    public String mainPage(@RequestParam(value = "name", defaultValue = "Незнакомец") String name, Model model) {
-        model.addAttribute("name", name);
+    public String mainPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = "Незакомец";
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            login = authentication.getName();
+        }
+        model.addAttribute("name", login);
         model.addAttribute("counter", counter.incrementAndGet());
         return "main";
     }
