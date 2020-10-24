@@ -2,7 +2,6 @@ package com.dk98126.mireabankapp.controller;
 
 import com.dk98126.mireabankapp.exception.LoginExistsException;
 import com.dk98126.mireabankapp.exception.PhoneNumberExistsException;
-import com.dk98126.mireabankapp.model.enm.AccountType;
 import com.dk98126.mireabankapp.model.form.CreateAccountRequestForm;
 import com.dk98126.mireabankapp.model.form.RegisterUserForm;
 import com.dk98126.mireabankapp.service.AccountRequestService;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.validation.Valid;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -78,6 +76,7 @@ public class MainController {
         return "create-request";
     }
 
+    //TODO передавать логин текущего пользователя, в зависимости от сессии
     @PostMapping("/create-request")
     public String createRequest(@ModelAttribute("form") CreateAccountRequestForm form) {
         accountRequestService.createRequest(form, login);
