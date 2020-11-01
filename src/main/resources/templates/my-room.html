@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>lk page</title>
+    <link th:replace="main.html :: bootstrap-css">
 </head>
 <body>
-<img th:src="@{/images/mirea-logo.png}" alt="mirea-logo" style="vertical-align: middle">
+<img th:src="@{/images/mirea-logo.png}" class="mx-auto d-block" width="100px" alt="mirea-logo">
 <form th:action="@{/main}">
-    <input type="submit" value="Сделать перевод">
+    <input class="btn btn-cyan my-4" type="submit" value="Сделать перевод">
 </form>
 <form th:action="@{/create-request}" method="get">
-    <input type="submit" value="Создать счет">
+    <input class="btn btn-blue my-4" type="submit" value="Создать счет">
 </form>
 <form th:action="@{/main}">
-    <input type="submit" value="История переводов">
+    <input class="btn btn-deep-orange my-4" type="submit" value="История переводов">
 </form>
 <form th:action="@{/main}">
-    <input type="submit" value="Состояния счетов">
+    <input class="btn btn-indigo my-4" type="submit" value="Состояния счетов">
 </form>
 <form th:action="@{/main}">
-    <input type="submit" value="Настройка аккаунта">
+    <input class="btn btn-lime my-4" type="submit" value="Настройка аккаунта">
 </form>
 <form th:action="@{/logout}">
-    <input type="submit" value="Выйти">
+    <input class="btn btn-outline-black my-4" type="submit" value="Выйти">
 </form>
+
+<div th:replace="main.html :: bootstrap-scripts"></div>
+
 </body>
 </html>
