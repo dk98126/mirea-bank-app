@@ -30,6 +30,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.webjars:bootstrap:4.5.3'
+    implementation 'org.webjars:mdbootstrap-bootstrap-material-design:4.5.3'
+    implementation 'org.webjars:font-awesome:5.15.1'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         exclude module: 'junit'

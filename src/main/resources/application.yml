@@ -9,7 +9,7 @@ spring:
 server:
   servlet:
     session:
-      timeout: 1m
+      timeout: 10m
       cookie:
         http-only: true
 

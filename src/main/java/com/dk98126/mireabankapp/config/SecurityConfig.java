@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // TODO чуть-чуть доконфигурировать сессию
         http
                 .authorizeRequests()
-                .antMatchers("/main", "/registration", "/login", "/images/**", "/favicon.ico").permitAll()
+                .antMatchers("/main", "/registration", "/login", "/images/**", "/favicon.ico", "/webjars/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()

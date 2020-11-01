@@ -3,21 +3,34 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Spring Security Example </title>
+    <link th:replace="main.html :: bootstrap-css">
 </head>
 <body>
-<div th:if="${param.error}">
-    Неверный логин или пароль!
-</div>
-<div th:if="${param.logout}">
-    Вы успешно вышли из личного кабинета!
-</div>
-<form th:action="@{/login}" method="post">
-    <div><label> Логин: <input type="text" name="username"/> </label></div>
-    <div><label> Пароль: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Войти"/></div>
+<form class="text-center border border-light p-5" th:action="@{/login}" method="post">
+    <p class="h4 mb-4">Вход</p>
+    <div>
+        <div>
+            <i class="fas fa-user input-prefix"></i>
+            <input type="text" name="username" class="form-control mb-4" placeholder="логин"/>
+        </div>
+        <div>
+            <i class="fas fa-key input-prefix"></i>
+            <input type="password" name="password" class="form-control mb-4" placeholder="пароль"/>
+        </div>
+        <div class="faster animated shake" style="color: red" th:if="${param.error}">
+            Неверный логин или пароль!
+        </div>
+        <div style="color: green" th:if="${param.logout}">
+            Вы успешно вышли из личного кабинета!
+        </div>
+    </div>
+    <input class="btn btn-amber my-4" type="submit" value="Войти"/>
 </form>
-<form th:action="@{/main}" method="get">
-    <div><input type="submit" value="Вернуться на главную"/></div>
+<form th:action="@{/main}"  method="get">
+    <div><input type="submit" class="btn btn-outline-black btn-block my-4" value="Вернуться на главную"/></div>
 </form>
+
+<div th:replace="main.html :: bootstrap-scripts"></div>
+
 </body>
 </html>

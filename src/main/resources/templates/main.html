@@ -4,17 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Main page test</title>
+    <th:block th:fragment="bootstrap-css">
+        <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.3/css/bootstrap.min.css}">
+        <link th:rel="stylesheet" th:href="@{/webjars/mdbootstrap-bootstrap-material-design/4.5.3/css/mdb.css}">
+        <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/5.15.1/css/all.css}">
+    </th:block>
 </head>
 <body>
+<img th:src="@{/images/mirea-logo.png}" class="mx-auto d-block" width="100px" alt="mirea-logo">
 
-<span th:text="${'Привет, ' + name + '. Сайт посетили ' + counter + ' раз'}"></span>
-<img th:src="@{/images/mirea-logo.png}" alt="mirea-logo" style="vertical-align: middle">
+<h5 th:text="${'Привет, ' + name + '. Сайт посетили ' + counter + ' раз'}" class="h5-responsive text-center"></h5>
 
-<form th:action="@{/registration}">
-    <input type="submit" value="Регистрация">
+<form th:action="@{/login}" class="d-flex justify-content-center">
+    <input type="submit" class="btn btn-amber my-4" value="Вход">
 </form>
-<form th:action="@{/login}">
-    <input type="submit" value="Вход">
+
+<form th:action="@{/registration}" class="d-flex justify-content-center">
+    <input type="submit" class="btn btn-outline-black my-4" value="Регистрация">
 </form>
+
+<th:block th:fragment="bootstrap-scripts">
+    <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.5.3/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/mdbootstrap-bootstrap-material-design/4.5.3/js/mdb.js}"></script>
+</th:block>
+
 </body>
 </html>
