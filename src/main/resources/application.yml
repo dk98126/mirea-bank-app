@@ -1,11 +1,13 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   datasource:
     url: jdbc:postgresql://localhost:5441/mireabankapp
     username: mireabankapp
     password: mireabankapp
+  liquibase:
+    change-log: classpath:/db/changelog/liquibase-changelog.xml
 server:
   servlet:
     session:

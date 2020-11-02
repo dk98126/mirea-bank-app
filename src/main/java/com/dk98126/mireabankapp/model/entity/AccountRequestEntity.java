@@ -13,7 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 public class AccountRequestEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "acc_req_id_gen")
+    @SequenceGenerator(name = "acc_req_id_gen", sequenceName = "acc_req_id_seq")
     @Column(name = "id")
     private Long id;
 
@@ -26,5 +27,5 @@ public class AccountRequestEntity {
     private UserEntity user;
 
     @OneToMany(mappedBy = "request")
-    private List<AccountRequestTransitionEntity> transitions;
+    private List<AccountRequestStatusEntity> statuses;
 }

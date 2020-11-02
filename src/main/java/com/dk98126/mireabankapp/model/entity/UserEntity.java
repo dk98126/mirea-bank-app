@@ -14,7 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class UserEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_gen")
+    @SequenceGenerator(name = "user_id_gen", sequenceName = "user_id_seq")
     @Column(name = "id")
     private Long id;
 
@@ -37,7 +38,7 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(name = "is_blocked", nullable = false, columnDefinition = "boolean default false")
+    @Column(name = "is_blocked", nullable = false)
     private boolean blocked;
 
     @Column(name = "phone_number", nullable = false, unique = true)

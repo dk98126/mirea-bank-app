@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="initial_tables_and_sequences" author="KrasnovDN">
+        <createSequence sequenceName="user_id_seq" incrementBy="50"/>
+        <createTable tableName="users">
+            <column name="id" type="bigint" defaultValue="nextval('user_id_seq')">
+                <constraints primaryKey="true" primaryKeyName="user_id_pk"/>
+            </column>
+            <column name="login" type="varchar(128)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="middle_name" type="varchar(128)"/>
+            <column name="last_name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_blocked" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="varchar(16)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <createSequence sequenceName="account_id_seq" incrementBy="50"/>
+        <createTable tableName="account">
+            <column name="id" type="bigint" defaultValue="nextval('account_id_seq')">
+                <constraints primaryKey="true" primaryKeyName="account_id_pk"/>
+            </column>
+            <column name="type" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frozen" type="boolean" defaultValue="false"/>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="user_id_fk"/>
+            </column>
+        </createTable>
+
+        <createSequence sequenceName="acc_req_id_seq" incrementBy="50"/>
+        <createTable tableName="account_request">
+            <column name="id" type="bigint" defaultValue="nextval('acc_req_id_seq')">
+                <constraints primaryKey="true" primaryKeyName="acc_req_id_pk"/>
+            </column>
+            <column name="type" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="user_id_fk"/>
+            </column>
+        </createTable>
+
+        <createSequence sequenceName="acc_req_stat_id_seq" incrementBy="50"/>
+        <createTable tableName="account_request_status">
+            <column name="id" type="bigint" defaultValue="nextval('acc_req_stat_id_seq')">
+                <constraints primaryKey="true" primaryKeyName="acc_req_stat_id_pk"/>
+            </column>
+            <column name="transition_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="varchar(1024)"/>
+            <column name="account_request_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="account_request"
+                             referencedColumnNames="id"
+                             foreignKeyName="account_request_id_fk"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="user_id_fk"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

@@ -12,7 +12,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class AccountEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_gen")
+    @SequenceGenerator(name = "account_id_gen", sequenceName = "account_id_seq")
     @Column(name = "id")
     private Long id;
 
@@ -21,9 +22,9 @@ public class AccountEntity {
     private AccountType type;
 
     @Column(name = "balance", nullable = false)
-    private Long balance;
+    private Double balance;
 
-    @Column(name = "frozen", nullable = false, columnDefinition = "boolean default false")
+    @Column(name = "frozen", nullable = false)
     private boolean frozen;
 
     @ManyToOne

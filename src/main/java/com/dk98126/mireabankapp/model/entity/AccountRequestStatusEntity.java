@@ -11,9 +11,10 @@ import java.time.LocalDateTime;
 @Data
 @Table(name = "account_request_status")
 @NoArgsConstructor
-public class AccountRequestTransitionEntity {
+public class AccountRequestStatusEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "acc_req_stat_id_gen")
+    @SequenceGenerator(name = "acc_req_stat_id_gen", sequenceName = "acc_req_stat_id_seq")
     @Column(name = "id")
     private Long id;
 
