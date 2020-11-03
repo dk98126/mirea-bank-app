@@ -21,6 +21,7 @@ public class AccountRequestStatusEntity {
     @Column(name = "transition_time", nullable = false)
     private LocalDateTime transitionTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private AccountRequestTransitionStatus status;
 

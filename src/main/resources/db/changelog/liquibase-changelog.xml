@@ -95,4 +95,12 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="add_status_column_to_account_request_status" author="KrasnovDN">
+        <addColumn tableName="account_request_status">
+            <column name="status" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
