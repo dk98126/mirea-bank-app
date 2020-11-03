@@ -18,9 +18,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -94,11 +94,10 @@ public class MainController {
     @GetMapping("/request-statuses")
     public String showStatusesPage(Model model) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<AccountRequestStatusEntity> statuses = accountRequestService.findAllStatuses(login);
+        List<AccountRequestStatusEntity> statuses = accountRequestService.findAll(login);
+        //TODO парсить время, подумать, что лучше отображать в таблице
         //TODO настроить стили на странице request-statuses
         model.addAttribute("statuses", statuses);
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy kk:mm:ss");
-        model.addAttribute("dateFormatter", dateFormatter);
         return "request-statuses";
     }
 }
