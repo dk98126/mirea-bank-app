@@ -11,7 +11,7 @@ spring:
 server:
   servlet:
     session:
-      timeout: 10m
+      timeout: 1m
       cookie:
         http-only: true
 

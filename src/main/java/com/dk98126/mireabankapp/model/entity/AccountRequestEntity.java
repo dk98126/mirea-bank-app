@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,6 +27,6 @@ public class AccountRequestEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserEntity user;
 
-    @OneToMany(mappedBy = "request")
-    private List<AccountRequestStatusEntity> statuses;
+    @OneToMany(mappedBy = "request", cascade = CascadeType.PERSIST)
+    private List<AccountRequestStatusEntity> statuses = new ArrayList<>();
 }

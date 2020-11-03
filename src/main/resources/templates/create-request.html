@@ -12,7 +12,7 @@
     <h5 class="h5-responsive">Выберите тип счета</h5>
     <select class="custom-select custom-select-lg mb-3" name="accountType">
         <option th:each="accountType : ${T(com.dk98126.mireabankapp.model.enm.AccountType).values()}"
-                th:value="${accountType}" th:text="${accountType}"></option>
+                th:value="${accountType}" th:text="${accountType.getAccountTypeName()}"></option>
     </select>
     <button class="btn btn-light-blue my-4" type="submit">Создать заявку</button>
 </form>
@@ -23,6 +23,5 @@
 <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.5.3/js/bootstrap.min.js}"></script>
-
 </body>
 </html>

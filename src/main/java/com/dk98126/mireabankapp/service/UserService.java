@@ -7,6 +7,7 @@ import com.dk98126.mireabankapp.model.enm.UserRole;
 import com.dk98126.mireabankapp.model.entity.UserEntity;
 import com.dk98126.mireabankapp.model.form.RegisterUserForm;
 import com.dk98126.mireabankapp.repository.UserRepo;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepo userRepo,
-                       PasswordEncoder passwordEncoder) {
-        this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     // TODO вместо исключений  возвращать список из fieldError
     public void registerUser(RegisterUserForm form) {

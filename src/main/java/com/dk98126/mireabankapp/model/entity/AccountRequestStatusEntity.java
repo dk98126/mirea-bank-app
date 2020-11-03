@@ -34,5 +34,5 @@ public class AccountRequestStatusEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity manager;
+    private UserEntity initiator;
 }
