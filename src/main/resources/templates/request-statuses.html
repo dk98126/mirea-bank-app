@@ -15,7 +15,7 @@
     <th>Сообщение</th>
     <tr th:each="status:${statuses}">
         <td th:text="${status.getId()}"></td>
-        <td th:text="${status.getTransitionTime()}"></td>
+        <td th:text="${dateFormatter.format(status.getTransitionTime())}"></td>
         <td th:text="${status.getStatus()}"></td>
         <td th:text="${status.getInitiator().getLogin()}"></td>
         <td th:text="${status.getMessage()}">""</td>
