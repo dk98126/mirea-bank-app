@@ -4,10 +4,7 @@ import com.dk98126.mireabankapp.exception.*;
 import com.dk98126.mireabankapp.model.dto.UserDto;
 import com.dk98126.mireabankapp.model.enm.UserRole;
 import com.dk98126.mireabankapp.model.entity.UserEntity;
-import com.dk98126.mireabankapp.model.form.RegisterUserForm;
-import com.dk98126.mireabankapp.model.form.UpdateLoginForm;
-import com.dk98126.mireabankapp.model.form.UpdateMailForm;
-import com.dk98126.mireabankapp.model.form.UpdatePasswordForm;
+import com.dk98126.mireabankapp.model.form.*;
 import com.dk98126.mireabankapp.repository.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,8 +48,8 @@ public class UserService {
         return "7" + numberFromDigits.substring(numberFromDigits.length() - 10);
     }
 
-    public UserEntity findUserByLogin(String login) {
-        return userRepo.findByLogin(login);
+    public UserEntity findUserById(String id) {
+        return userRepo.findByUserId(Long.parseLong(id));
     }
 
     public void updatePassword(UserEntity user, UpdatePasswordForm form) {
@@ -79,6 +76,25 @@ public class UserService {
             throw new MailExistsException();
         }
         user.setMail(mail);
+        userRepo.save(user);
+    }
+
+    public void updateFullName(UserEntity user, UpdateFullNameForm form) {
+        String firstName = form.getFirstName();
+        String middleName = form.getMiddleName();
+        String lastName = form.getLastName();
+        user.setFirstName(firstName);
+        user.setMiddleName(middleName);
+        user.setLastName(lastName);
+        userRepo.save(user);
+    }
+
+    public void updatePhoneNumber(UserEntity user, UpdatePhoneNumberForm form) {
+        String phoneNumber = formatPhoneNumber(form.getPhoneNumber());
+        if (userRepo.existsByPhoneNumber(phoneNumber)) {
+            throw new PhoneNumberExistsException();
+        }
+        user.setPhoneNumber(phoneNumber);
         userRepo.save(user);
     }
 

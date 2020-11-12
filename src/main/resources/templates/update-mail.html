@@ -12,8 +12,8 @@
         <tr>
             <td>
                 <div class="md-form">
-                    <input type="text" id="new-mail-input" class="form-control" th:field="*{newMail}">
-                    <label for="new-mail-input">Новая почта</label>
+                    <input type="text" id="new-mail-input" class="form-control mb-4" placeholder="Новая почта"
+                           th:field="*{newMail}">
                 </div>
             </td>
             <td style="color: red" th:if="${#fields.hasErrors('newMail')}" th:errors="*{newMail}"></td>

@@ -12,7 +12,7 @@ public interface AccountRequestStatusRepo extends JpaRepository<AccountRequestSt
     @Query(value = "select ars from AccountRequestStatusEntity ars " +
             "join fetch ars.request ar " +
             "join fetch ar.user u " +
-            "where u.login = :login " +
+            "where u.userId = :id " +
             "order by ars.transitionTime desc")
-    List<AccountRequestStatusEntity> findAllUserStatuses(@Param("login") String login);
+    List<AccountRequestStatusEntity> findAllUserStatuses(@Param("id") Long id);
 }

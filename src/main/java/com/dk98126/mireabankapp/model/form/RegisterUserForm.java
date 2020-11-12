@@ -21,14 +21,14 @@ public class RegisterUserForm {
     String mail;
 
     @NotBlank
-    @Pattern(regexp = "^[А-Я][а-я]*", message = "Имя должно содержать только символы кириллицы и начинаться с прописной буквы")
+    @Pattern(regexp = "^[А-Я][а-я]*$", message = "Имя должно содержать только символы кириллицы и начинаться с прописной буквы")
     private String firstName;
 
     @Pattern(regexp = "^([А-Я][а-я]*)?$", message = "Отчество должно содержать только символы кириллицы и начинаться с прописной буквы")
     private String middleName;
 
     @NotBlank
-    @Pattern(regexp = "^[А-Я][а-я]*", message = "Фамилия должна содержать только символы кириллицы и начинаться с прописной буквы")
+    @Pattern(regexp = "^[А-Я][а-я]*$", message = "Фамилия должна содержать только символы кириллицы и начинаться с прописной буквы")
     private String lastName;
 
     @NotBlank

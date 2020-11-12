@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>Spring Security Example </title>
     <link th:replace="main.html :: bootstrap-css">
@@ -11,11 +10,11 @@
     <div>
         <div>
             <i class="fas fa-user input-prefix"></i>
-            <input type="text" name="username" class="form-control mb-4" placeholder="логин"/>
+            <input type="text" name="username" class="form-control mb-4" placeholder="Логин"/>
         </div>
         <div>
             <i class="fas fa-key input-prefix"></i>
-            <input type="password" name="password" class="form-control mb-4" placeholder="пароль"/>
+            <input type="password" name="password" class="form-control mb-4" placeholder="Пароль"/>
         </div>
         <div class="faster animated shake" style="color: red" th:if="${param.error}">
             Неверный логин или пароль!
@@ -26,7 +25,7 @@
     </div>
     <input class="btn btn-amber my-4" type="submit" value="Войти"/>
 </form>
-<form th:action="@{/main}"  method="get">
+<form th:action="@{/main}" method="get">
     <div><input type="submit" class="btn btn-outline-black btn-block my-4" value="Вернуться на главную"/></div>
 </form>
 

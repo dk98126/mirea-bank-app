@@ -37,7 +37,8 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String login = "Незакомец";
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            login = authentication.getName();
+            UserEntity userEntity = userService.findUserById(authentication.getName());
+            login = userEntity.getLogin();
         }
         model.addAttribute("name", login);
         model.addAttribute("counter", counter.incrementAndGet());
@@ -46,7 +47,9 @@ public class MainController {
 
     @GetMapping("/registration")
     public String registrationPage(@ModelAttribute("form") RegisterUserForm form) {
-        return "registration";
+        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+            return "redirect:/my-room";
+        } else return "registration";
     }
 
     @PostMapping("/registration")
@@ -74,7 +77,9 @@ public class MainController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+            return "redirect:/my-room";
+        } else return "login";
     }
 
     @GetMapping("/my-room")
@@ -89,15 +94,15 @@ public class MainController {
 
     @PostMapping("/create-request")
     public String createRequest(@ModelAttribute("form") CreateAccountRequestForm form) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        accountRequestService.createRequest(form, login);
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        accountRequestService.createRequest(form, id);
         return "success-create-request";
     }
 
     @GetMapping("/request-statuses")
     public String showStatusesPage(Model model) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<AccountRequestStatusEntity> statuses = accountRequestService.findAllStatuses(login);
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<AccountRequestStatusEntity> statuses = accountRequestService.findAllStatuses(id);
         //TODO настроить стили на странице request-statuses
         model.addAttribute("statuses", statuses);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy kk:mm:ss");
@@ -120,7 +125,7 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             return "update-login";
         }
-        UserEntity user = userService.findUserByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
         try {
             userService.updateLogin(user, form);
         } catch (LoginExistsException e) {
@@ -142,7 +147,7 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             return "update-mail";
         }
-        UserEntity user = userService.findUserByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
         try {
             userService.updateMail(user, form);
         } catch (MailExistsException e) {
@@ -163,7 +168,7 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             return "update-password";
         }
-        UserEntity user = userService.findUserByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
         try {
             userService.updatePassword(user, form);
         } catch (WrongPasswordException e) {
@@ -178,4 +183,39 @@ public class MainController {
         return "success-update-password";
     }
 
+    @GetMapping("/update-full-name")
+    public String updateFullNamePage(@ModelAttribute("form") UpdateFullNameForm form) {
+        return "update-full-name";
+    }
+
+    @PostMapping("/update-full-name")
+    public String updateFullName(@ModelAttribute("form") @Valid UpdateFullNameForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "update-full-name";
+        }
+        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
+        userService.updateFullName(user, form);
+        return "success-update-full-name";
+    }
+
+    @GetMapping("/update-phone-number")
+    public String updatePhoneNumberPage(@ModelAttribute("form") UpdatePhoneNumberForm form) {
+        return "update-phone-number";
+    }
+
+    @PostMapping("/update-phone-number")
+    public String updatePhoneNumber(@ModelAttribute("form") @Valid UpdatePhoneNumberForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "update-phone-number";
+        }
+        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
+        try {
+            userService.updatePhoneNumber(user, form);
+        } catch (PhoneNumberExistsException e) {
+            FieldError fieldError = new FieldError("form", "phoneNumber", "Пользователь с таким номером телефона уже существует");
+            bindingResult.addError(fieldError);
+            return "update-phone-number";
+        }
+        return "success-update-phone-number";
+    }
 }

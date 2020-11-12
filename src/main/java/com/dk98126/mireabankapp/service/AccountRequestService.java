@@ -22,8 +22,9 @@ public class AccountRequestService {
     private final UserRepo userRepo;
     private final AccountRequestStatusRepo accountRequestStatusRepo;
 
-    public void createRequest(@NotNull CreateAccountRequestForm form, String userLogin) {
-        UserEntity userEntity = userRepo.findByLogin(userLogin);
+    public void createRequest(@NotNull CreateAccountRequestForm form, String userId) {
+        Long id = Long.parseLong(userId);
+        UserEntity userEntity = userRepo.findByUserId(id);
         AccountRequestEntity accountRequestEntity = new AccountRequestEntity();
         accountRequestEntity.setType(form.getAccountType());
         accountRequestEntity.setUser(userEntity);
@@ -36,7 +37,8 @@ public class AccountRequestService {
         accountRequestRepo.save(accountRequestEntity);
     }
 
-    public List<AccountRequestStatusEntity> findAllStatuses(String userLogin) {
-        return accountRequestStatusRepo.findAllUserStatuses(userLogin);
+    public List<AccountRequestStatusEntity> findAllStatuses(String userId) {
+        Long id = Long.parseLong(userId);
+        return accountRequestStatusRepo.findAllUserStatuses(id);
     }
 }

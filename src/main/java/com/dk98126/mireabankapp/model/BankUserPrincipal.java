@@ -1,6 +1,7 @@
 package com.dk98126.mireabankapp.model;
 
 import com.dk98126.mireabankapp.model.entity.UserEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,14 +11,12 @@ import java.util.Arrays;
 import java.util.Collection;
 
 // TODO разобраться и переконфигурить
+
+@AllArgsConstructor
 public class BankUserPrincipal implements UserDetails, Serializable {
     private static final long serialVersionUID = 1;
 
     private UserEntity userEntity;
-
-    public BankUserPrincipal(UserEntity userEntity) {
-        this.userEntity = userEntity;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -31,7 +30,7 @@ public class BankUserPrincipal implements UserDetails, Serializable {
 
     @Override
     public String getUsername() {
-        return userEntity.getLogin();
+        return "" + userEntity.getUserId();
     }
 
     @Override
