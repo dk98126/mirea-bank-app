@@ -3,8 +3,8 @@ package com.dk98126.mireabankapp.model.form;
 import lombok.Data;
 import validators.annotation.PasswordConstraint;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Data
@@ -12,9 +12,13 @@ public class RegisterUserForm {
     @NotBlank
     String login;
 
-    @NotNull
+    @NotBlank
     @PasswordConstraint
     String password;
+
+    @NotBlank
+    @Email
+    String mail;
 
     @NotBlank
     @Pattern(regexp = "^[А-Я][а-я]*", message = "Имя должно содержать только символы кириллицы и начинаться с прописной буквы")

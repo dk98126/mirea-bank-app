@@ -103,4 +103,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="add_mail_column_to_users" author="IlyaRyzhov">
+        <addColumn tableName="users">
+            <column name="mail" type="varchar(128)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

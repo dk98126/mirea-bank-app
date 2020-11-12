@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class UserEntity {
 
     @Column(name = "login", nullable = false, unique = true)
     private String login;
+
+    @Column(name = "mail", nullable = false, unique = true)
+    @Email
+    private String mail;
 
     @Column(name = "password", nullable = false)
     private String password;

@@ -1,10 +1,9 @@
 package com.dk98126.mireabankapp.controller;
 
-import com.dk98126.mireabankapp.exception.LoginExistsException;
-import com.dk98126.mireabankapp.exception.PhoneNumberExistsException;
+import com.dk98126.mireabankapp.exception.*;
 import com.dk98126.mireabankapp.model.entity.AccountRequestStatusEntity;
-import com.dk98126.mireabankapp.model.form.CreateAccountRequestForm;
-import com.dk98126.mireabankapp.model.form.RegisterUserForm;
+import com.dk98126.mireabankapp.model.entity.UserEntity;
+import com.dk98126.mireabankapp.model.form.*;
 import com.dk98126.mireabankapp.service.AccountRequestService;
 import com.dk98126.mireabankapp.service.UserService;
 import lombok.AllArgsConstructor;
@@ -65,6 +64,10 @@ public class MainController {
             FieldError fieldError = new FieldError("form", "phoneNumber", "Телефон уже зарегистрирован");
             bindingResult.addError(fieldError);
             return "registration";
+        } catch (MailExistsException e) {
+            FieldError fieldError = new FieldError("form", "mail", "Пользователь с такой почтой уже зарегистрирован");
+            bindingResult.addError(fieldError);
+            return "registration";
         }
         return "redirect:/my-room";
     }
@@ -101,4 +104,78 @@ public class MainController {
         model.addAttribute("dateFormatter", dateFormatter);
         return "request-statuses";
     }
+
+    @GetMapping("/account-settings")
+    public String accountSettingsPage() {
+        return "account-settings";
+    }
+
+    @GetMapping("/update-login")
+    public String updateLoginPage(@ModelAttribute("form") UpdateLoginForm form) {
+        return "update-login";
+    }
+
+    @PostMapping("/update-login")
+    public String updateLogin(@ModelAttribute("form") @Valid UpdateLoginForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "update-login";
+        }
+        UserEntity user = userService.findUserByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+        try {
+            userService.updateLogin(user, form);
+        } catch (LoginExistsException e) {
+            FieldError fieldError = new FieldError("form", "newLogin", "Пользователь с таким логином уже существует");
+            bindingResult.addError(fieldError);
+            return "update-login";
+        }
+
+        return "success-update-login";
+    }
+
+    @GetMapping("/update-mail")
+    public String updateMailPage(@ModelAttribute("form") UpdateMailForm form) {
+        return "update-mail";
+    }
+
+    @PostMapping("/update-mail")
+    public String updateMail(@ModelAttribute("form") UpdateMailForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "update-mail";
+        }
+        UserEntity user = userService.findUserByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+        try {
+            userService.updateMail(user, form);
+        } catch (MailExistsException e) {
+            FieldError fieldError = new FieldError("form", "newMail", "Пользователь с такой почтой уже существует");
+            bindingResult.addError(fieldError);
+            return "update-mail";
+        }
+        return "success-update-mail";
+    }
+
+    @GetMapping("/update-password")
+    public String updatePasswordPage(@ModelAttribute("form") UpdatePasswordForm form) {
+        return "update-password";
+    }
+
+    @PostMapping("/update-password")
+    public String updatePassword(@ModelAttribute("form") @Valid UpdatePasswordForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "update-password";
+        }
+        UserEntity user = userService.findUserByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+        try {
+            userService.updatePassword(user, form);
+        } catch (WrongPasswordException e) {
+            FieldError fieldError = new FieldError("form", "oldPassword", "Неверный старый пароль");
+            bindingResult.addError(fieldError);
+            return "update-password";
+        } catch (NewPasswordEqualsOldPasswordException e) {
+            FieldError fieldError = new FieldError("form", "newPassword", "Новый пароль совпадает со старым");
+            bindingResult.addError(fieldError);
+            return "update-password";
+        }
+        return "success-update-password";
+    }
+
 }

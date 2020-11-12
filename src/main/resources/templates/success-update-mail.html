@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>lk page</title>
+    <link th:replace="main.html :: bootstrap-css">
+</head>
+<body>
+<img th:src="@{/images/mirea-logo.png}" class="mx-auto d-block" width="100px" alt="mirea-logo">
+<h5 class="h5-responsive text-center" style="color: green">Почта успешно изменена!</h5>
+<form th:action="@{/my-room}">
+    <input class="btn btn-outline-blue-grey my-4" type="submit" value="Перейти в личный кабинет">
+</form>
+</body>
+
+<div th:replace="main.html :: bootstrap-scripts"></div>
+
+</html>
