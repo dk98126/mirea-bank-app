@@ -11,6 +11,4 @@ public interface UserRepo extends JpaRepository<UserEntity, Long> {
     boolean existsByMail(String mail);
 
     UserEntity findByLogin(String login);
-
-    UserEntity findByUserId(Long id);
 }

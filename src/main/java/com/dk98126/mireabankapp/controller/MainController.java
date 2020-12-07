@@ -1,6 +1,7 @@
 package com.dk98126.mireabankapp.controller;
 
 import com.dk98126.mireabankapp.exception.*;
+import com.dk98126.mireabankapp.model.BankUserPrincipal;
 import com.dk98126.mireabankapp.model.entity.AccountRequestStatusEntity;
 import com.dk98126.mireabankapp.model.entity.UserEntity;
 import com.dk98126.mireabankapp.model.form.*;
@@ -9,11 +10,9 @@ import com.dk98126.mireabankapp.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +21,8 @@ import javax.validation.Valid;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.dk98126.mireabankapp.utils.ControllerUtils.*;
 
 @Controller
 @AllArgsConstructor
@@ -34,11 +35,10 @@ public class MainController {
     //TODO разобраться почему при каждом открытии единственной вкладки счетчик увеличивается на 2
     @GetMapping("/main")
     public String mainPage(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = getAuthenticationFromSecurityContextHolder();
         String login = "Незакомец";
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            UserEntity userEntity = userService.findUserById(authentication.getName());
-            login = userEntity.getLogin();
+            login = authentication.getName();
         }
         model.addAttribute("name", login);
         model.addAttribute("counter", counter.incrementAndGet());
@@ -47,9 +47,7 @@ public class MainController {
 
     @GetMapping("/registration")
     public String registrationPage(@ModelAttribute("form") RegisterUserForm form) {
-        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            return "redirect:/my-room";
-        } else return "registration";
+        return redirectIfAuthenticated("/my-room", "registration");
     }
 
     @PostMapping("/registration")
@@ -60,16 +58,13 @@ public class MainController {
         try {
             userService.registerUser(form);
         } catch (LoginExistsException e) {
-            FieldError fieldError = new FieldError("form", "login", "Логин занят");
-            bindingResult.addError(fieldError);
+            addFieldError(bindingResult, "form", "login", "Логин занят");
             return "registration";
         } catch (PhoneNumberExistsException e) {
-            FieldError fieldError = new FieldError("form", "phoneNumber", "Телефон уже зарегистрирован");
-            bindingResult.addError(fieldError);
+            addFieldError(bindingResult, "form", "phoneNumber", "Телефон уже зарегистрирован");
             return "registration";
         } catch (MailExistsException e) {
-            FieldError fieldError = new FieldError("form", "mail", "Пользователь с такой почтой уже зарегистрирован");
-            bindingResult.addError(fieldError);
+            addFieldError(bindingResult, "form", "mail", "Пользователь с такой почтой уже зарегистрирован");
             return "registration";
         }
         return "redirect:/my-room";
@@ -77,9 +72,7 @@ public class MainController {
 
     @GetMapping("/login")
     public String loginPage() {
-        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            return "redirect:/my-room";
-        } else return "login";
+        return redirectIfAuthenticated("/my-room", "login");
     }
 
     @GetMapping("/my-room")
@@ -94,15 +87,15 @@ public class MainController {
 
     @PostMapping("/create-request")
     public String createRequest(@ModelAttribute("form") CreateAccountRequestForm form) {
-        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        accountRequestService.createRequest(form, id);
+        String login = getNameFromSecurityContextHolder();
+        accountRequestService.createRequest(form, login);
         return "success-create-request";
     }
 
     @GetMapping("/request-statuses")
     public String showStatusesPage(Model model) {
-        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<AccountRequestStatusEntity> statuses = accountRequestService.findAllStatuses(id);
+        String login = getNameFromSecurityContextHolder();
+        List<AccountRequestStatusEntity> statuses = accountRequestService.findAllStatuses(login);
         //TODO настроить стили на странице request-statuses
         model.addAttribute("statuses", statuses);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy kk:mm:ss");
@@ -125,12 +118,14 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             return "update-login";
         }
-        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
+        Authentication authentication = getAuthenticationFromSecurityContextHolder();
+        UserEntity user = userService.findUserByLogin(authentication.getName());
         try {
             userService.updateLogin(user, form);
+            BankUserPrincipal bankUserPrincipal = (BankUserPrincipal) authentication.getPrincipal();
+            bankUserPrincipal.setLogin(user.getLogin());
         } catch (LoginExistsException e) {
-            FieldError fieldError = new FieldError("form", "newLogin", "Пользователь с таким логином уже существует");
-            bindingResult.addError(fieldError);
+            addFieldError(bindingResult, "form", "newLogin", "Пользователь с таким логином уже существует");
             return "update-login";
         }
 
@@ -147,12 +142,15 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             return "update-mail";
         }
-        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
+        Authentication authentication = getAuthenticationFromSecurityContextHolder();
+        UserEntity user = userService.findUserByLogin(authentication.getName());
         try {
             userService.updateMail(user, form);
+            BankUserPrincipal bankUserPrincipal = (BankUserPrincipal) authentication.getPrincipal();
+            bankUserPrincipal.setMail(user.getMail());
+
         } catch (MailExistsException e) {
-            FieldError fieldError = new FieldError("form", "newMail", "Пользователь с такой почтой уже существует");
-            bindingResult.addError(fieldError);
+            addFieldError(bindingResult, "form", "newMail", "Пользователь с такой почтой уже существует");
             return "update-mail";
         }
         return "success-update-mail";
@@ -168,16 +166,14 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             return "update-password";
         }
-        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
+        UserEntity user = userService.findUserByLogin(getNameFromSecurityContextHolder());
         try {
             userService.updatePassword(user, form);
         } catch (WrongPasswordException e) {
-            FieldError fieldError = new FieldError("form", "oldPassword", "Неверный старый пароль");
-            bindingResult.addError(fieldError);
+            addFieldError(bindingResult, "form", "oldPassword", "Неверный старый пароль");
             return "update-password";
         } catch (NewPasswordEqualsOldPasswordException e) {
-            FieldError fieldError = new FieldError("form", "newPassword", "Новый пароль совпадает со старым");
-            bindingResult.addError(fieldError);
+            addFieldError(bindingResult, "form", "newPassword", "Новый пароль совпадает со старым");
             return "update-password";
         }
         return "success-update-password";
@@ -193,8 +189,11 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             return "update-full-name";
         }
-        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
+        Authentication authentication = getAuthenticationFromSecurityContextHolder();
+        UserEntity user = userService.findUserByLogin(authentication.getName());
         userService.updateFullName(user, form);
+        BankUserPrincipal bankUserPrincipal = (BankUserPrincipal) authentication.getPrincipal();
+        bankUserPrincipal.setFullName(user.getFirstName(), user.getMiddleName(), user.getLastName());
         return "success-update-full-name";
     }
 
@@ -208,14 +207,18 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             return "update-phone-number";
         }
-        UserEntity user = userService.findUserById(SecurityContextHolder.getContext().getAuthentication().getName());
+        Authentication authentication = getAuthenticationFromSecurityContextHolder();
+        UserEntity user = userService.findUserByLogin(authentication.getName());
         try {
             userService.updatePhoneNumber(user, form);
+            BankUserPrincipal bankUserPrincipal = (BankUserPrincipal) authentication.getPrincipal();
+            bankUserPrincipal.setPhoneNumber(user.getPhoneNumber());
         } catch (PhoneNumberExistsException e) {
-            FieldError fieldError = new FieldError("form", "phoneNumber", "Пользователь с таким номером телефона уже существует");
-            bindingResult.addError(fieldError);
+            addFieldError(bindingResult, "form", "phoneNumber", "Пользователь с таким номером телефона уже существует");
             return "update-phone-number";
         }
         return "success-update-phone-number";
     }
+
+
 }

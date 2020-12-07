@@ -30,7 +30,7 @@ public class BankUserPrincipal implements UserDetails, Serializable {
 
     @Override
     public String getUsername() {
-        return "" + userEntity.getUserId();
+        return userEntity.getLogin();
     }
 
     @Override
@@ -51,5 +51,23 @@ public class BankUserPrincipal implements UserDetails, Serializable {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setLogin(String login) {
+        userEntity.setLogin(login);
+    }
+
+    public void setMail(String mail) {
+        userEntity.setMail(mail);
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        userEntity.setPhoneNumber(phoneNumber);
+    }
+
+    public void setFullName(String firstName, String middleName, String lastName) {
+        userEntity.setFirstName(firstName);
+        userEntity.setMiddleName(middleName);
+        userEntity.setLastName(lastName);
     }
 }

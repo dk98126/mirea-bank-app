@@ -48,8 +48,8 @@ public class UserService {
         return "7" + numberFromDigits.substring(numberFromDigits.length() - 10);
     }
 
-    public UserEntity findUserById(String id) {
-        return userRepo.findByUserId(Long.parseLong(id));
+    public UserEntity findUserByLogin(String login) {
+        return userRepo.findByLogin(login);
     }
 
     public void updatePassword(UserEntity user, UpdatePasswordForm form) {
