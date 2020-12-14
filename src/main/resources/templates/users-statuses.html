@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Статусы заявок</title>
+    <title>Заявки пользователей</title>
     <link th:replace="main.html :: bootstrap-css">
 </head>
 <body>
@@ -13,14 +13,18 @@
     <th>Статус</th>
     <th>Инициатор</th>
     <th>Сообщение</th>
-    <tr th:each="status:${statuses}">
-        <td th:text="${status.getId()}"></td>
-        <td th:text="${dateFormatter.format(status.getTransitionTime())}"></td>
-        <td th:text="${status.getStatus().getRequestTransitionStatusName()}"></td>
-        <td th:text="${status.getInitiator().getLogin()}"></td>
-        <td th:text="${status.getMessage()}">""</td>
+    <th>Действие</th>
+    <tr th:each="requestStatus:${statuses}">
+        <td th:text="${requestStatus.getId()}"></td>
+        <td th:text="${dateFormatter.format(requestStatus.getTransitionTime())}"></td>
+        <td th:text="${requestStatus.getStatus()}"></td>
+        <td th:text="${requestStatus.getInitiator().getLogin()}"></td>
+        <td th:text="${requestStatus.getMessage()}">""</td>
+        <td> <form th:action="@{/my-room}">
+            <input class="btn btn-outline-blue-grey my-4" type="submit" value="Рассмотреть заявку">
+        </form>
+        </td>
     </tr>
-    <tr th:each="status:${statuses}">
 </table>
 <form th:action="@{/my-room}">
     <input class="btn btn-outline-blue-grey my-4" type="submit" value="Перейти в личный кабинет">

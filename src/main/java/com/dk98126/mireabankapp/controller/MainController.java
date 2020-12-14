@@ -6,6 +6,7 @@ import com.dk98126.mireabankapp.model.entity.AccountRequestStatusEntity;
 import com.dk98126.mireabankapp.model.entity.UserEntity;
 import com.dk98126.mireabankapp.model.form.*;
 import com.dk98126.mireabankapp.service.AccountRequestService;
+import com.dk98126.mireabankapp.service.AccountService;
 import com.dk98126.mireabankapp.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -31,6 +32,7 @@ public class MainController {
     private final UserService userService;
     private final AccountRequestService accountRequestService;
     private final AtomicInteger counter = new AtomicInteger();
+    private final AccountService accountService;
 
     //TODO разобраться почему при каждом открытии единственной вкладки счетчик увеличивается на 2
     @GetMapping("/main")
@@ -220,5 +222,27 @@ public class MainController {
         return "success-update-phone-number";
     }
 
+    @GetMapping("/users-statuses")
+    public String showUsersStatusesPage(Model model, RequestStatusForm form) {
+        List<AccountRequestStatusEntity> statuses = accountService.findALlRequests(form.getAccountRequestTransitionStatus().name());
+        model.addAttribute("statuses", statuses);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy kk:mm:ss");
+        model.addAttribute("dateFormatter", dateFormatter);
+     /*   for(int i=0;i<statuses.size();i++)
+        {
+            model.addAttribute("status"+i, statuses.get(i));
+        }*/
 
+        return "users-statuses";
+    }
+
+    @GetMapping("/managing-requests")
+    public String managingRequestsPage() {
+        return "managing-requests";
+    }
+
+    @PostMapping("/managing-requests")
+    public String managingRequests(Model model, @ModelAttribute("form") RequestStatusForm form) {
+        return showUsersStatusesPage(model, form);
+    }
 }
