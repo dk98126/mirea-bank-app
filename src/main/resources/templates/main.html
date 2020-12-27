@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Main page test</title>
@@ -14,21 +14,27 @@
 <img th:src="@{/images/mirea-logo.png}" class="mx-auto d-block" width="100px" alt="mirea-logo">
 
 <h5 th:text="${'Привет, ' + name + '. Сайт посетили ' + counter + ' раз'}" class="h5-responsive text-center"></h5>
+<div sec:authorize="!isAuthenticated()">
+    <form th:action="@{/login}" class="d-flex justify-content-center">
+        <input type="submit" class="btn btn-amber my-4" value="Вход">
+    </form>
 
-<form th:action="@{/login}" class="d-flex justify-content-center">
-    <input type="submit" class="btn btn-amber my-4" value="Вход">
-</form>
+    <form th:action="@{/registration}" class="d-flex justify-content-center">
+        <input type="submit" class="btn btn-outline-black my-4" value="Регистрация">
+    </form>
 
-<form th:action="@{/registration}" class="d-flex justify-content-center">
-    <input type="submit" class="btn btn-outline-black my-4" value="Регистрация">
-</form>
-
-<th:block th:fragment="bootstrap-scripts">
-    <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
-    <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/4.5.3/js/bootstrap.min.js}"></script>
-    <script th:src="@{/webjars/mdbootstrap-bootstrap-material-design/4.5.3/js/mdb.js}"></script>
-</th:block>
-
+    <th:block th:fragment="bootstrap-scripts">
+        <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+        <script th:src="@{/webjars/popper.js/1.16.0/umd/popper.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/4.5.3/js/bootstrap.min.js}"></script>
+        <script th:src="@{/webjars/mdbootstrap-bootstrap-material-design/4.5.3/js/mdb.js}"></script>
+    </th:block>
+</div>
+<div sec:authorize="isAuthenticated()">
+    <form th:action="@{/my-room}" class="d-flex justify-content-center">
+        <input type="submit" class="btn btn-amber my-4" value="Вернуться в личный кабинет">
+    </form>
+</div>
 </body>
+
 </html>

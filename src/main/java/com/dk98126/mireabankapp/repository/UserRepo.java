@@ -8,5 +8,7 @@ public interface UserRepo extends JpaRepository<UserEntity, Long> {
 
     boolean existsByPhoneNumber(String phoneNumber);
 
+    boolean existsByMail(String mail);
+
     UserEntity findByLogin(String login);
 }

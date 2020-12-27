@@ -1,12 +1,13 @@
 package com.dk98126.mireabankapp.model.form;
 
-import com.dk98126.mireabankapp.model.enm.AccountType;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class CreateAccountRequestForm {
+public class UpdateMailForm {
     @NotBlank
-    AccountType accountType;
+    @Email
+    String newMail;
 }
