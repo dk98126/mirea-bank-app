@@ -1,5 +1,6 @@
 package com.dk98126.mireabankapp.config;
 
+import com.dk98126.mireabankapp.model.enm.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/main", "/registration", "/login", "/images/**", "/favicon.ico", "/webjars/**").permitAll()
+                .antMatchers("/users-statuses","/managing-requests").hasAuthority("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()

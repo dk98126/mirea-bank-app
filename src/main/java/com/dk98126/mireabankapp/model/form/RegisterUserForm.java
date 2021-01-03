@@ -1,14 +1,10 @@
 package com.dk98126.mireabankapp.model.form;
 
 import lombok.Data;
-import validators.annotation.FirstNameConstraint;
-import validators.annotation.LastNameConstraint;
-import validators.annotation.MiddleNameConstraint;
-import validators.annotation.PasswordConstraint;
+import validators.annotation.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Data
 public class RegisterUserForm {
@@ -35,6 +31,6 @@ public class RegisterUserForm {
     private String lastName;
 
     @NotBlank
-    @PasswordConstraint
+    @PhoneNumberConstraint
     private String phoneNumber;
 }
